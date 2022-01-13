@@ -1,5 +1,5 @@
-const serverUrl = "https://edrq8aj6uilj.grandmoralis.com:2053/server"; //Server url from moralis.io
-const appId = "VHVdtVWLxbMAIqyD6ycfbFAk9cV1yhVw7U2RkKM6"; // Application id from moralis.io
+const serverUrl = "https://vf7orfi3vmaf.usemoralis.com:2053/server"; //Server url from moralis.io
+const appId = "ZRPb5CXxr5y6jFckw9qOwh7FA6U3ftNHwAZRgbMm"; // Application id from moralis.io
 
 let currentTrade = {};
 let currentSelectSide;
@@ -17,7 +17,7 @@ async function init() {
 
 async function listAvailableTokens() {
   const result = await Moralis.Plugins.oneInch.getSupportedTokens({
-    chain: "eth", // The blockchain you want to use (eth/bsc/polygon)
+    chain: "bsc", // The blockchain you want to use (eth/bsc/polygon)
   });
   tokens = result.tokens;
   let parent = document.getElementById("token_list");
@@ -81,17 +81,20 @@ function closeModal() {
 async function getQuote() {
   if (!currentTrade.from || !currentTrade.to || !document.getElementById("from_amount").value) return;
 
-  let amount = Number(document.getElementById("from_amount").value * 10 ** currentTrade.from.decimals);
+  console.log(">>>>")
+  console.log(currentTrade.from);
+
+  let amount = Number(document.getElementById("from_amount").value * 10 ** 18);
 
   const quote = await Moralis.Plugins.oneInch.quote({
-    chain: "eth", // The blockchain you want to use (eth/bsc/polygon)
+    chain: "bsc", // The blockchain you want to use (eth/bsc/polygon)
     fromTokenAddress: currentTrade.from.address, // The token you want to swap
     toTokenAddress: currentTrade.to.address, // The token you want to receive
     amount: amount,
   });
   console.log(quote);
   document.getElementById("gas_estimate").innerHTML = quote.estimatedGas;
-  document.getElementById("to_amount").value = quote.toTokenAmount / 10 ** quote.toToken.decimals;
+  document.getElementById("to_amount").value = quote.toTokenAmount / 10 ** 18;
 }
 
 async function trySwap() {
@@ -99,7 +102,7 @@ async function trySwap() {
   let amount = Number(document.getElementById("from_amount").value * 10 ** currentTrade.from.decimals);
   if (currentTrade.from.symbol !== "ETH") {
     const allowance = await Moralis.Plugins.oneInch.hasAllowance({
-      chain: "eth", // The blockchain you want to use (eth/bsc/polygon)
+      chain: "bsc", // The blockchain you want to use (eth/bsc/polygon)
       fromTokenAddress: currentTrade.from.address, // The token you want to swap
       fromAddress: address, // Your wallet address
       amount: amount,
@@ -107,7 +110,7 @@ async function trySwap() {
     console.log(allowance);
     if (!allowance) {
       await Moralis.Plugins.oneInch.approve({
-        chain: "eth", // The blockchain you want to use (eth/bsc/polygon)
+        chain: "bsc", // The blockchain you want to use (eth/bsc/polygon)
         tokenAddress: currentTrade.from.address, // The token you want to swap
         fromAddress: address, // Your wallet address
       });
@@ -123,7 +126,7 @@ async function trySwap() {
 
 function doSwap(userAddress, amount) {
   return Moralis.Plugins.oneInch.swap({
-    chain: "eth", // The blockchain you want to use (eth/bsc/polygon)
+    chain: "bsc", // The blockchain you want to use (eth/bsc/polygon)
     fromTokenAddress: currentTrade.from.address, // The token you want to swap
     toTokenAddress: currentTrade.to.address, // The token you want to receive
     amount: amount,

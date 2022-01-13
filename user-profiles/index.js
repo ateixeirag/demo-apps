@@ -1,5 +1,5 @@
-const serverUrl = "INSERT_SERVER_URL"; //Server url from moralis.io
-const appId = "INSERT_APP_ID"; // Application id from moralis.io
+const serverUrl = "https://vf7orfi3vmaf.usemoralis.com:2053/server"; //Server url from moralis.io
+const appId = "ZRPb5CXxr5y6jFckw9qOwh7FA6U3ftNHwAZRgbMm"; // Application id from moralis.io
 Moralis.start({ serverUrl, appId });
 
 const appHeaderContainer = document.getElementById("app-header-btns");
